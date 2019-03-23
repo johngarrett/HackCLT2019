@@ -28,7 +28,7 @@ fn get_csv_data<T: Into<Option<char>>, P: AsRef<Path>>(path: P, delimiter: T) ->
             line
             .split(delimiter)
             .map(|number|
-                number
+                 {dbg!(number); number}
                 .trim_matches(|a| a == '"')
                 .parse::<usize>().unwrap()
             ).collect()
@@ -67,9 +67,9 @@ fn read_zip_csv() -> Option<Vec<(usize, f64, f64)>> {
         .map(|a| {dbg!(a.clone()); a})
         .filter_map(|line| 
              (Some((
-                line.split(",").nth(0)?.parse().ok().unwrap(),
-                line.split(",").nth(1)?.parse().ok().unwrap(),
-                line.split(",").nth(2)?.parse().ok().unwrap()
+                line.split(",").nth(0)?.parse::<usize>().ok().expect("Failed to parse int"),
+                line.split(",").nth(1)?.parse::<f64>().ok().expect("Failed to parse float"),
+                line.split(",").nth(2)?.parse::<f64>().ok().expect("Failed to parse float 2")
         ))))
         .collect()
     )
@@ -85,17 +85,18 @@ fn get_zip_locs() -> Option<HashMap<usize, (f64, f64)>> {
     Some(h)
 }
 
-fn get_zip_loc(zip_locs: &HashMap<usize, (f64, f64)>, zip: usize) -> (f64, f64) {
+fn get_zip_loc(zip_locs: &HashMap<usize, (f64, f64)>, zip: usize) -> Option<(f64, f64)> {
     if !zip_locs.contains_key(&zip) {
-        println!("Warning zip {} not found", zip);
-        return (0.0, 0.0);
+        None
     }
-    zip_locs[&zip]
+    else {
+        Some(zip_locs[&zip])
+    }
 }
 
 pub fn simplify_heatmap_data() -> Option<JsonValue> {
-    let csv_labels = get_csv_labels("client_encounters.csv", '|').unwrap();
-    let csv_data = normalize(get_csv_data("client_encounters.csv", '|').unwrap());
+    let csv_labels = get_csv_labels("client_encounters.csv", None).unwrap();
+    let csv_data = normalize(get_csv_data("client_encounters.csv", None).unwrap());
     let zip_locs = get_zip_locs().unwrap();
     dbg!(&zip_locs);
     Some(json![{
@@ -108,12 +109,12 @@ pub fn simplify_heatmap_data() -> Option<JsonValue> {
                      label.clone() : 
                         csv_data
                          .iter()
-                         .map(|row|
-                            json![{
+                         .filter_map(|row|
+                            Some(json![{
                                 "zip" : row[0] as usize,
-                                "loc" : get_zip_loc(&zip_locs, row[0] as usize),
+                                "loc" : get_zip_loc(&zip_locs, row[0] as usize)?,
                                 "val" : row[i]
-                            }])
+                            }]))
                         .collect::<Vec<JsonValue>>()
                  }]
             ).collect::<Vec<JsonValue>>()
