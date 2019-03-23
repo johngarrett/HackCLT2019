@@ -41,12 +41,16 @@
   <body>
     <div id="floating-panel">
       <!---->
-        <input type="radio", onclick= "showMale()">Male
-        <input type="radio", onclick="showFemale()">Female
-        <input type="radio", onclick="showBoth()">Both</input>
-        <input type="checkbox", onclick="createPoint(35.227, -80.843124)">White</input>
-        <input type="checkbox", onclick="clearPoints()">Black</input>
-        <input type="checkbox", onclick="showOther()">Other</input>
+      <div class="control">
+        <label class="radio"> <input type="radio" name="foobar", id = "male", onclick= "getPoints()"> Male </label>
+        <label class="radio"> <input type="radio" name="foobar", id = "female", onclick= "getPoints()"> Female </label>
+        <label class="radio"> <input type="radio" name="foobar", id = "both", onclick= "getPoints()" checked> Both </label>
+      </div>
+        <input type="checkbox", id = "white", onclick="getPoints()">White</input>
+        <input type="checkbox", id = "black", onclick="getPoints()">Black</input>
+        <input type="checkbox", id = "asian", onclick="getPoints()">Asian</input>
+        <input type="checkbox", id = "latino", onclick="getPoints()">Latino</input>
+        <input type="checkbox", id = "other", onclick="getPoints()">Other</input>
       </div>  
     <div id="map"></div>
     <script src="heatmap.js"></script>
