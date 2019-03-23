@@ -6,18 +6,25 @@ function initMap() {
     center: {lat: 35.227085, lng: -80.843124},
     mapTypeId: 'roadmap'
   });
-  heatmap = new google.maps.visualization.HeatmapLayer({
-    data: getPoints(),
-    map: map
-  });
-  heatmap.set('radius', 50);
+  generateHeatmap();
+}
+function generateHeatmap(){
+    heatmap = new google.maps.visualization.HeatmapLayer({
+        data: getPoints(),
+        map: map
+      });
+      heatmap.set('radius', 50);
 }
 function toggleHeatmap() {
   heatmap.setMap(heatmap.getMap() ? null : map);
 }
 function getPoints() {
-  createPoint(35, -80);
   return pointArray;
+}
+function clearPoints(){
+    heatmap.setMap(null);
+    pointArray = new google.maps.MVCArray();
+    generateHeatmap();    
 }
 function createPoint(x, y){
   pointArray.push(new google.maps.LatLng(x, y));
