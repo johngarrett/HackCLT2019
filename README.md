@@ -2,9 +2,9 @@
 
 ### Hack Charlotte 2019
 
-We took data from CSV file provided by 3 medical organizations (via a temporary ssh server) in the Charlotte health care system and visualized it.
-
-To satisfy data security concerns, the data was further anonymised by normalizing the input through a local rust server. 
+We gathered data from multiple CSV files provided by 3 medical organizations (via a temporary ssh server) in the Charlotte health care system and visualized it.
+To satisfy data security concerns, the data was further anonymised by normalizing the output through a local rust server.
+  - The only conclusions the can be derrived from the resulting data are purely relational.
 
 Data was overlaid atop Google's mapping API.
 
